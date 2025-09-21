@@ -3,7 +3,7 @@ defaults:
   - /callbacks: [checkpoint_every_n_steps, checkpoint_monitor, learning_rate_monitor]
   - /data: openwebtext
   - /model: small
-  - /strategy: single_device
+  - /strategy: ddp
   - /noise: log-linear
   - /lr_scheduler: constant_warmup
   - /prior: none
@@ -13,7 +13,7 @@ mode: train  # train / ppl_eval / sample_eval
 
 seed: 1
 batch_size: 128
-size: 12800
+size: 102400
 
 loader:
   global_batch_size: 512
@@ -71,7 +71,7 @@ trainer:
   gradient_clip_val: 1.0
   precision: 'bf16'
   num_sanity_val_steps: 2
-  max_steps: 1_000_000
+  max_steps: 10000
   log_every_n_steps: 100
   limit_train_batches: 1.0   # train on full dataset, can be used to toggle quick run
   limit_val_batches: 0.0     # validate on full dataset, can be used to toggle quick run
@@ -100,6 +100,5 @@ checkpointing:
   # Use custom `save_dir` if, e.g., saving to S3 bucket, otherwise leave this parameter as is
   save_dir: ${cwd:}
   # Note: `checkpoints` path should correspond to `checkpoint_every_n_steps.dirpath`
-  resume_from_ckpt: true
-  # resume_ckpt_path: ${.save_dir}/checkpoints/last.ckpt
-  resume_ckpt_path: /home/akasaei/shayan/other/duo/outputs/openwebtext/2025.09.16/182638/checkpoints/last.ckpt
+  resume_from_ckpt: false
+  resume_ckpt_path: ${.save_dir}/checkpoints/last.ckpt

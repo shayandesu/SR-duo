@@ -53,15 +53,9 @@ pip install flash_attn==2.7.4.post1
 ### :izakaya_lantern: Integral Cache [Important]
 Curriculum Learning (`Sec. 4.1`) and Discrete Consistency Distillation (`Sec. 4.2`) require mapping Gaussian to discrete diffusion parameters via the Diffusion Transformation operator (`Sec. 3`), which involves computing an integral (dependent only on the tokenizer’s vocabulary size). To avoid slowing down training, we pre-compute and cache this integral. Cached operators for `bert-base-uncased` (LM1B) and `gpt2` (OWT) are in [`integral/`](integral). For other tokenizers, run: 
 ```
-python utils.py --vocab_size=N
+python utils.py --vocab_size=N # N is 10292 in snip case
 ```
 where `N` is the vocabulary size of the tokenizer.
-
-### Checkpoints
-
-The checkpoints for the DUO models (distilled/undistilled) trained on OpenWebText for 1M training steps are available on:
-* [Huggingface](https://huggingface.co/collections/s-sahoo/duo-67f9ff8fde919224e5fbd875)🤗.
-* [Google Drive folder](https://drive.google.com/drive/folders/1JpqFM8XRvifwIkjWPfMyuDvu41r1yk0t?usp=share_link) as the HF checkpoints can't be finetuned.
 
 ### Slurm scripts
 Run `mkdir watch_folder` to create a directory to store slurm logs
@@ -73,34 +67,30 @@ sbatch scripts/ABC_XYZ.sh
 # Training
 <a name="training"></a>
 
-To train DUO use the following scripts:
-* LM1B
-  * w/ sentencepacking (same as in D3PM)
-    * Training script: [`scripts/train_lm1b_duo_sentencepacking.sh`](./scripts/train_lm1b_duo_sentencepacking.sh)
-    * [Wandb run](https://api.wandb.ai/links/kuleshov-group/huwt0ek3) 
-  * w/o sentencepacking (same as in MDLM, SEDD)
-    * Training script: [`scripts/train_lm1b_duo.sh`](./scripts/train_lm1b_duo.sh)
-    * [Wandb run](https://api.wandb.ai/links/sahoo-diffusion/lkv5z3tm)
-    
-* OWT: [`scripts/train_owt_duo.sh`](./scripts/train_owt_duo.sh).
+* DUO
+```
+python main.py algo=duo
+```
 
+* AR
+```
+python main.py algo=ar
+```
 
-**Curriculum Learning increases memory consumption.** For faster training on OWT, one may consider a two-stage approach:
-* `Stage 1`: Curriculum Learning for `500K` steps
-  * Use [`scripts/train_owt_duo.sh`](./scripts/train_owt_duo.sh) with the following modifications:
-    * Reduced batch size (`loader.batch_size=32` on an `80 GB` GPU)
-    * `trainer.max_steps=500000` 
-* `Stage 2`: Finetuning the checkpoint from `stage 1` for `500K` more steps
-  * Training script: [`scripts/train_owt_duo_finetune.sh`](scripts/train_owt_duo_finetune.sh)
-  * Features a larger batch size (`loader.batch_size=64` on an `80 GB`) than `stage 1`.
-  * [Wandb run](https://api.wandb.ai/links/kuleshov-group/h74aekb3): This run resumes training a `stage 1` checkpoint. Although trained for `1M` steps, the results reported in the paper correspond to the checkpoint at `500K` steps.
+* SEDD
+```
+python main.py algo=sedd sampling.predictor=analytic
+```
 
-Control the batch size per GPU using the argument `loader.batch_size`. If `loader.batch_size * num_gpus < loader.global_batch_size`, PyTorch Lightning resorts to gradient accumulation. 
+* MDLM
+```
+python main.py algo=mdlm
+```
 
-# Distillation
-<a name="distillation"></a>
-
-To distil a model using the Discrete Consisitency Distillation (`Alg. 1` in the paper), use [`scripts/distil_owt.sh`](scripts/distil_owt.sh)
+* D3PM
+```
+python main.py algo=d3pm eval.compute_generative_perplexity=False 
+```
 
 
 
