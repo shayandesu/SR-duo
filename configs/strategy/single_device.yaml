@@ -1,0 +1,3 @@
+# conf/strategy/single_device.yaml
+_target_: lightning.pytorch.strategies.SingleDeviceStrategy
+device: 0
