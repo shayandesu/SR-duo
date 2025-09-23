@@ -1,12 +1,3 @@
-# [The Diffusion Duality (ICML 2025)](https://arxiv.org/abs/2506.10892v1)
-By [Subham Sekhar Sahoo](https://s-sahoo.github.io), [Justin Deschenaux](https://jdeschena.github.io), [Aaron Gokaslan](https://skylion007.github.io),
-[Guanghan Wang](https://tech.cornell.edu/people/guanghan-wang/), [Justin Chiu](https://justinchiu.netlify.app), [Volodymyr Kuleshov](https://www.cs.cornell.edu/~kuleshov/)
-
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1Sf7R-dqdR6gq-H8nyZ9E3ZkyvqMTqcwq?usp=sharing)
-[![deploy](https://img.shields.io/badge/Blog%20%20-8A2BE2)](http://s-sahoo.github.io/duo)
-[![arXiv](https://img.shields.io/badge/arXiv-2406.07524-red.svg)](https://arxiv.org/abs/2506.10892v1)
-[![deploy](https://img.shields.io/badge/🤗-Huggingface-blue)](https://huggingface.co/collections/s-sahoo/duo-67f9ff8fde919224e5fbd875)
-
 **We unlock few-step generation in discrete diffusion language models via the underlying Guassian diffusion.**
 
 <div align="center">
@@ -48,6 +39,8 @@ conda activate duo
 conda install nvidia/label/cuda-12.4.0::cuda-toolkit
 pip install -r requirements.txt
 pip install flash_attn==2.7.4.post1
+pip install numexpr==2.8.4
+pip install sympytorch==0.1.1
 ```
 
 ### :izakaya_lantern: Integral Cache [Important]
