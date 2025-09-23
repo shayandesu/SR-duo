@@ -32,7 +32,7 @@ In this repo, we release:
 # Getting Started
 
 To get started, create a conda environment containing the required dependencies.
-
+## NOTE: The cache is already saved and will be used during running the code so NO NEED TO RUN THE INTEGRAL CACHE PART
 ```bash
 conda create -n duo python=3.12
 conda activate duo
