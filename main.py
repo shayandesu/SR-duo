@@ -171,7 +171,7 @@ def _eval_ppl(diffusion_model, config, logger, tokenizer):
 def _train(diffusion_model, config, logger, tokenizer):
   logger.info('Starting Training.')
   
-  with open("/home/akasaei/shayan/other/Diffusion-Based-SR/hyperparameters/params.pkl", 'rb') as p:
+  with open("../../../../params.pkl", 'rb') as p:
         params = pickle.load(p)
   
   params.size = config.size
@@ -181,10 +181,10 @@ def _train(diffusion_model, config, logger, tokenizer):
   params.latent_dim = 512
   
   wandb_logger = None
-  # if config.get('wandb', None) is not None:
-  #   wandb_logger = L.pytorch.loggers.WandbLogger(
-  #     config=omegaconf.OmegaConf.to_object(config),
-  #     **config.wandb)
+  if config.get('wandb', None) is not None:
+    wandb_logger = L.pytorch.loggers.WandbLogger(
+      config=omegaconf.OmegaConf.to_object(config),
+      **config.wandb)
 
   if (config.checkpointing.resume_from_ckpt
       and config.checkpointing.resume_ckpt_path is not None
