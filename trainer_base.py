@@ -279,9 +279,6 @@ class TrainerBase(L.LightningModule):
     for k, v in self.metrics.train_nlls.items():
       self.log(name=k, value=v.compute(), on_step=False,
                on_epoch=True, sync_dist=True)
-      
-    
-    torch.cuda.empty_cache()
 
   def on_validation_epoch_start(self):
     self.metrics.reset()

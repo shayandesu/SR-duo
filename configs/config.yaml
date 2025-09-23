@@ -12,11 +12,10 @@ defaults:
 mode: train  # train / ppl_eval / sample_eval
 
 seed: 1
-batch_size: 128
 size: 102400
 
 loader:
-  global_batch_size: 512
+  global_batch_size: 128
   eval_global_batch_size: ${.global_batch_size}
   # Note: batch_size and eval_batch_size are **per machine**
   batch_size: ${div_up:${.global_batch_size}, ${eval:${trainer.devices} * ${trainer.num_nodes}}}

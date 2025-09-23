@@ -175,7 +175,7 @@ def _train(diffusion_model, config, logger, tokenizer):
         params = pickle.load(p)
   
   params.size = config.size
-  params.batch_size = config.batch_size
+  params.batch_size = config.loader.batch_size
   # params.conditioning = config.model.text_conditioning
   params.conditioning = False
   params.latent_dim = 512
@@ -209,8 +209,8 @@ def _train(diffusion_model, config, logger, tokenizer):
   # _print_batch(train_ds, valid_ds, tokenizer)
   
   train_dataloader = env.create_train_iterator(params.tasks, None, params)
-  params.size=1024
-  valid_dataloader = env.create_train_iterator(params.tasks, None, params)
+  # params.size=1024
+  # valid_dataloader = env.create_train_iterator(params.tasks, None, params)
 
   if config.training.finetune_path != '':
     assert utils.fsspec_exists(config.training.finetune_path)
