@@ -1084,11 +1084,11 @@ class EnvDataset(Dataset):
         """
         res = {}
         
-        res["input_ids"] = self.tokenizer(sample['tree_encoded'])
-        attention_mask = torch.tensor([0.01 if token == self.tokenizer.pad_token_id else 2
+        res["input_ids"] = self.tokenizer(sample['tree_encoded']).to(dtype=torch.long)
+        attention_mask = torch.tensor([0 if token == self.tokenizer.pad_token_id else 2
                           if token == self.tokenizer.eos_token_id else 1 
                           for token in res['input_ids']])
-        res["attention_mask"] = attention_mask
+        res["attention_mask"] = attention_mask.to(dtype=torch.long)
         
         if self.cond:
             x_to_fit = sample["x_to_fit"]

@@ -62,27 +62,27 @@ sbatch scripts/ABC_XYZ.sh
 
 * DUO
 ```
-python main.py algo=duo
+python main.py algo=duo model.length=128
 ```
 
 * AR
 ```
-python main.py algo=ar
+python main.py algo=ar model.length=128
 ```
 
 * SEDD
 ```
-python main.py algo=sedd sampling.predictor=analytic
+python main.py algo=sedd sampling.predictor=analytic model.length=128
 ```
 
 * MDLM
 ```
-python main.py algo=mdlm
+python main.py algo=mdlm model.length=128
 ```
 
 * D3PM
 ```
-python main.py algo=d3pm eval.compute_generative_perplexity=False 
+python main.py algo=d3pm eval.compute_generative_perplexity=False model.length=128
 ```
 
 

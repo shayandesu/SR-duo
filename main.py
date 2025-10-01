@@ -120,22 +120,28 @@ def _generate_samples(diffusion_model, config, logger,
         num_steps=config.sampling.steps)
       model.metrics.record_entropy(samples)
       text_samples = model.tokenizer.batch_decode(samples)
-      model.metrics.record_generative_perplexity(
-        text_samples, config.model.length, model.device)
+      # model.metrics.record_generative_perplexity(
+      #   text_samples, config.model.length, model.device)
       all_samples.extend(list(text_samples))
   generative_ppl = 0.
   entropy = 0.
   if not config.sampling.semi_ar:
-    generative_ppl = model.metrics.gen_ppl.compute().item()
+    # generative_ppl = model.metrics.gen_ppl.compute().item()
     entropy = model.metrics.sample_entropy.compute().item()
-    print('Generative perplexity:', generative_ppl)
+    # print('Generative perplexity:', generative_ppl)
     print('Sample entropy:', entropy)
   samples_path = config.eval.generated_samples_path
+  
+  ### Check for validity ratio ###
+  null_count = sum(1 for item in all_samples if item is None)
+  val_ratio = 1 - null_count/len(all_samples)
+  
   with fsspec.open(samples_path, 'w') as f:
-    json.dump({'generative_ppl': generative_ppl,
-               'entropy': entropy,
-               'generated_seqs': all_samples}, f, indent=4)
+    json.dump({'entropy': entropy,
+               'generated_seqs': all_samples,
+               'ratio': val_ratio}, f, indent=4)
   print('Samples saved at:', samples_path)
+  print(f"Validiy Ratio: {null_count}/{len(all_samples)}={val_ratio}")
 
 def _eval_ppl(diffusion_model, config, logger, tokenizer):
   logger.info('Starting Perplexity Eval.')
@@ -195,7 +201,7 @@ def _train(diffusion_model, config, logger, tokenizer):
     ckpt_path = None
     
     
-  tk = Tokenizer(params, 200)
+  tk = Tokenizer(params, config.model.length)
   env = FunctionEnvironment(params, tk)
 
   # Lightning callbacks
@@ -236,9 +242,11 @@ def main(config):
   """Main entry point for training."""
   L.seed_everything(config.seed)
   _print_config(config, resolve=True, save_cfg=True)
+  with open("../../../../params.pkl", 'rb') as p:
+        params = pickle.load(p)
   
   logger = utils.get_logger(__name__)
-  tokenizer = dataloader.get_tokenizer(config)
+  tokenizer = Tokenizer(params, config.model.length)
   if config.algo.name == 'ar':
     diffusion_model = algo.AR
   elif config.algo.name == 'mdlm':

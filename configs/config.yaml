@@ -29,7 +29,7 @@ sampling:
   noise_removal: ancestral  # 'ancestral', 'greedy', 'none'
   use_float64: True
   p_nucleus: 1.0
-  num_sample_batches: 2  # Total samples: `num_gpus` * `loader.eval_batch_size` * num_sample_batches
+  num_sample_batches: 4  # Total samples: `num_gpus` * `loader.eval_batch_size` * num_sample_batches
   num_sample_log: 2
   semi_ar: False
   stride_length: 1
@@ -45,7 +45,7 @@ training:
   finetune_path: ''
 
 eval:
-  checkpoint_path: ''  # Used to evaluate a checkpoint after training.
+  checkpoint_path: '/home/xulei/shayan/SR/SR-duo/outputs/openwebtext/2025.09.25/154614/checkpoints/best.ckpt'  # Used to evaluate a checkpoint after training.
   disable_ema: False
   compute_generative_perplexity: False
   perplexity_batch_size: 8
@@ -70,7 +70,7 @@ trainer:
   gradient_clip_val: 1.0
   precision: 'bf16'
   num_sanity_val_steps: 2
-  max_steps: 10000
+  max_steps: 50000
   log_every_n_steps: 100
   limit_train_batches: 1.0   # train on full dataset, can be used to toggle quick run
   limit_val_batches: 0.0     # validate on full dataset, can be used to toggle quick run
